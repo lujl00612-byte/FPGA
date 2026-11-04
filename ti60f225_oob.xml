@@ -16,20 +16,7 @@
         <efx:design_file name="rtl/true_dual_port_ram.v" version="default" library="default" />
         <efx:design_file name="rtl/reset.v" version="default" library="default" />
         <efx:design_file name="rtl/simple_dual_port_ram.v" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/ddr3_top.v" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/axi4_bus_ctl/axi4_bus_ctl.v" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/local_bus_ctl/local_bus_ctl.v" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/memory_bus_ctl/memory_bus_ctl.v" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/phy_ctl/ddr_phy_wrlvl.v" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/phy_ctl/ddr_phy_rdlvl_dqs.v" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/phy_ctl/ddr_phy_wrcal.v" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/phy_ctl/ddr_calibration_ini.v" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/phy_ctl/ddr_phy_if.v" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/phy_ctl/phy_ctl.v" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/phy_ctl/ddr_mpr_rdlvl.v" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/ddr3_parameter.vh" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/lb2_axi_clk.v" version="default" library="default" />
-        <efx:design_file name="rtl/ddr3_controller/common/efx_fifo_v2.3/efx_fifo_wrapper.v" version="default" library="default" />
+
         <efx:design_file name="rtl/debayer/line_buffer.v" version="default" library="default" />
         <efx:design_file name="rtl/debayer/gaussian_pyramid_2px.v" version="default" library="default" />
         <efx:design_file name="rtl/debayer/camera_smooth_2px.v" version="default" library="default" />
@@ -95,6 +82,8 @@
         <efx:design_file name="rtl/edge/canny_tag_stream_2px.v" version="default" library="default" />
         <efx:design_file name="rtl/edge/canny_recursive_frame.v" version="default" library="default" />
         <efx:design_file name="rtl/edge/axi_video_arbiter.v" version="default" library="default" />
+        <efx:design_file name="ip/ddr3_official/ddr3_official.sv" version="default" library="default" />
+        <efx:design_file name="rtl/frame_buffer_V3/efinity_ddr3_adapter.v" version="default" library="default" />
         <efx:top_vhdl_arch name="" />
         <efx:msg_config name="" />
         <efx:partition_definitions name="" />

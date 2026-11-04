@@ -154,8 +154,8 @@
         <efxpt:comp_gpio name="ddr_cas_n" gpio_def="GPIOR_N_02" mode="output" bus_name="" io_standard="1.5 V SSTL">
             <efxpt:output_config name="ddr_cas_n" name_ddio_lo="" register_option="register" clock_name="sdram_clk" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
-        <efxpt:comp_gpio name="ddr_ck" gpio_def="GPIOR_P_09" mode="output" bus_name="" io_standard="1.5 V Differential SSTL">
-            <efxpt:output_config name="ddr_ck_hi" name_ddio_lo="ddr_ck_lo" register_option="register" clock_name="sdram_clk" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="resync" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+        <efxpt:comp_gpio name="ddr_ck" gpio_def="GPIOR_P_09" mode="clkout" bus_name="" io_standard="1.5 V Differential SSTL">
+            <efxpt:output_config name="" name_ddio_lo="" register_option="none" clock_name="sdram_clk" is_clock_inverted="true" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
         </efxpt:comp_gpio>
         <efxpt:comp_gpio name="ddr_cke[0]" gpio_def="GPIOB_N_09" mode="output" bus_name="ddr_cke" io_standard="1.5 V SSTL">
             <efxpt:output_config name="ddr_cke[0]" name_ddio_lo="" register_option="register" clock_name="sdram_clk" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="4" fastclk_name=""/>
@@ -251,13 +251,13 @@
         </efxpt:comp_gpio>
         <efxpt:comp_gpio name="ddr_dqs[0]" gpio_def="GPIOB_P_15" mode="inout" bus_name="ddr_dqs" io_standard="1.5 V Differential SSTL">
             <efxpt:input_config name="ddr_dqs_in_hi[0]" name_ddio_lo="ddr_dqs_in_lo[0]" conn_type="normal" is_register="true" clock_name="rx_cal_clk" is_clock_inverted="false" pull_option="none" is_schmitt_trigger="false" ddio_type="resync" is_bus_hold="false" delay="0" is_serial="false" is_dyn_delay="false" fastclk_name="" pullup_ena_name="ddr_dqs_PULL_UP_ENA[0]" dyn_delay_en_name="ddr_dqs_DLY_ENA[0]" dyn_delay_reset_name="ddr_dqs_DLY_RST[0]" dyn_delay_ctrl_name="ddr_dqs_DLY_CTRL[0]" clkmux_buf_name=""/>
-            <efxpt:output_config name="ddr_dqs_out_hi[0]" name_ddio_lo="ddr_dqs_out_lo[0]" register_option="register" clock_name="tx_cal_clk" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="resync" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
-            <efxpt:output_enable_config name="ddr_dqs_oe[0]" is_register="true" clock_name="tx_cal_clk" is_clock_inverted="false" name_oen="ddr_dqs_oe_n[0]"/>
+            <efxpt:output_config name="ddr_dqs_out_hi[0]" name_ddio_lo="ddr_dqs_out_lo[0]" register_option="register" clock_name="sdram_clk" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="resync" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+            <efxpt:output_enable_config name="ddr_dqs_oe[0]" is_register="true" clock_name="sdram_clk" is_clock_inverted="false" name_oen="ddr_dqs_oe_n[0]"/>
         </efxpt:comp_gpio>
         <efxpt:comp_gpio name="ddr_dqs[1]" gpio_def="GPIOB_P_02" mode="inout" bus_name="ddr_dqs" io_standard="1.5 V Differential SSTL">
             <efxpt:input_config name="ddr_dqs_in_hi[1]" name_ddio_lo="ddr_dqs_in_lo[1]" conn_type="normal" is_register="true" clock_name="rx_cal_clk" is_clock_inverted="false" pull_option="none" is_schmitt_trigger="false" ddio_type="resync" is_bus_hold="false" delay="0" is_serial="false" is_dyn_delay="false" fastclk_name="" pullup_ena_name="ddr_dqs_PULL_UP_ENA[1]" dyn_delay_en_name="ddr_dqs_DLY_ENA[1]" dyn_delay_reset_name="ddr_dqs_DLY_RST[1]" dyn_delay_ctrl_name="ddr_dqs_DLY_CTRL[1]" clkmux_buf_name=""/>
-            <efxpt:output_config name="ddr_dqs_out_hi[1]" name_ddio_lo="ddr_dqs_out_lo[1]" register_option="register" clock_name="tx_cal_clk" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="resync" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
-            <efxpt:output_enable_config name="ddr_dqs_oe[1]" is_register="true" clock_name="tx_cal_clk" is_clock_inverted="false" name_oen="ddr_dqs_oe_n[1]"/>
+            <efxpt:output_config name="ddr_dqs_out_hi[1]" name_ddio_lo="ddr_dqs_out_lo[1]" register_option="register" clock_name="sdram_clk" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="resync" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
+            <efxpt:output_enable_config name="ddr_dqs_oe[1]" is_register="true" clock_name="sdram_clk" is_clock_inverted="false" name_oen="ddr_dqs_oe_n[1]"/>
         </efxpt:comp_gpio>
         <efxpt:comp_gpio name="ddr_odt[0]" gpio_def="GPIOB_P_06" mode="output" bus_name="ddr_odt" io_standard="1.5 V SSTL">
             <efxpt:output_config name="ddr_odt[0]" name_ddio_lo="" register_option="register" clock_name="sdram_clk" is_clock_inverted="false" is_slew_rate="false" tied_option="none" ddio_type="none" delay="0" is_serial="false" drive_strength="8" fastclk_name=""/>
@@ -331,10 +331,10 @@
                 <efxpt:pin name="pll_shift_ena" type_name="SHIFT_ENA" is_bus="false"/>
                 <efxpt:pin name="" type_name="DESKEWED" is_bus="false"/>
             </efxpt:gen_pin>
-            <efxpt:comp_output_clock name="tx_cal_clk_90edge" number="0" out_divider="8" is_dyn_phase="true" phase_setting="0" is_inverted="false" conn_type="gclk"/>
+            <efxpt:comp_output_clock name="tx_cal_clk_90edge" number="0" out_divider="8" is_dyn_phase="true" phase_setting="4" is_inverted="false" conn_type="gclk"/>
             <efxpt:comp_output_clock name="sdram_clk" number="1" out_divider="8" is_dyn_phase="false" phase_setting="0" is_inverted="false" conn_type="gclk"/>
             <efxpt:comp_output_clock name="rx_cal_clk" number="2" out_divider="8" is_dyn_phase="true" phase_setting="0" is_inverted="false" conn_type="gclk"/>
-            <efxpt:comp_output_clock name="tx_cal_clk" number="3" out_divider="8" is_dyn_phase="true" phase_setting="0" is_inverted="false" conn_type="gclk"/>
+            <efxpt:comp_output_clock name="ddr_core_clk" number="3" out_divider="16" is_dyn_phase="false" phase_setting="0" is_inverted="false" conn_type="gclk"/>
             <efxpt:comp_output_clock name="clk_100m" number="4" out_divider="32" is_dyn_phase="false" phase_setting="0" is_inverted="false" conn_type="rclk"/>
             <efxpt:comp_prop/>
         </efxpt:pll>

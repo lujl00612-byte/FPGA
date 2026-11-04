@@ -19,12 +19,13 @@ def main():
             commit=subprocess.check_output(['git','rev-parse','refs/tags/'+VERSION+'^{commit}'],cwd=ROOT,text=True).strip()
         for v in m['artifacts'].values():assert sha(ROOT/v['path'])==v['sha256'] and (ROOT/v['path']).stat().st_size==v['bytes']
         data=decode(ROOT/m['artifacts']['hex']['path']);stamp=now()
+        baseline=read(ROOT/'config/deployment-baseline.json')
         folder=ROOT/'artifacts/hardware'/('flash-'+stamp.strftime('%Y%m%d-%H%M%S'));folder.mkdir(parents=True)
         SESSION.parent.mkdir(exist_ok=True);SESSION.write_text(str(folder),encoding='utf-8')
         write(folder/'preflight.json',{'version':VERSION,'timestamp':stamp.isoformat(),'timezone':'Asia/Shanghai','release_commit':commit,
             'release_tag':VERSION,'artifacts':m['artifacts'],'payload_bytes':len(data),'payload_sha256':hashlib.sha256(data).hexdigest(),
-            'backup_bytes':max(1048576,((len(data)+65535)//65536)*65536),'previous_version':VERSION,
-            'previous_payload_bytes':len(data),'previous_payload_sha256':hashlib.sha256(data).hexdigest(),
+            'backup_bytes':max(1048576,((len(data)+65535)//65536)*65536),'previous_version':baseline['version'],
+            'previous_payload_bytes':baseline['payload_bytes'],'previous_payload_sha256':baseline['payload_sha256'],
             'automatic_threshold':False,'fixed_rgb':[280,240,376],
             'metric_suites_run':[],'physical_cold_boot':'not performed','live_acceptance':'pending'})
         print(str(folder))

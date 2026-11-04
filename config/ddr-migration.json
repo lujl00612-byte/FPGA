@@ -1,0 +1,39 @@
+{
+  "revision": "V4-ddr1",
+  "baseline_tag": "V4",
+  "baseline_commit": "81edea8",
+  "official_ip": {
+    "vendor": "efinixinc.com",
+    "library": "memory_controller",
+    "name": "efx_ddr3_soft_controller",
+    "version": "5.16",
+    "tool": "Efinity 2026.1.132",
+    "configuration": "ip/ddr3_official/settings.json"
+  },
+  "hardware": "Ti60F225I3 and x16 DDR3, row14/column10/bank3, BL8, CL6/CWL5, 400 MHz DDR clock",
+  "application_clock_mhz": 100,
+  "phy_core_clock_mhz": 200,
+  "write_clock_phase_degrees": 90,
+  "changes": [
+    "Replace active reference DDR controller with generated Efinity IP",
+    "Hold combined AXI address grant through backpressure and retain write ID",
+    "Wait for successful DDR calibration before releasing frame buffer reset",
+    "Use differential inverted clock output and vendor DQS/DQ clock relationship",
+    "Preserve V4 baseline identity for pre-write Flash backup"
+  ],
+  "automatic_threshold": false,
+  "fixed_rgb": [
+    280,
+    240,
+    376
+  ],
+  "old_metric_suites_run": [],
+  "literal_hard_controller_requirement": "Ti60 has no supported hardened DDR3 controller; selected the official supported DDR3 Soft Controller IP",
+  "official_sources": [
+    "https://www.efinixinc.com/docs/ddr3-controller-core-ug-v2.1.pdf",
+    "https://www.elitestek.com/uploads/soft/230626/efinity-ug-v12.0.pdf"
+  ],
+  "status": "source integrated; actual build pending",
+  "physical_cold_boot": "not performed",
+  "camera_acceptance": "not performed"
+}

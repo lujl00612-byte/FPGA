@@ -2,18 +2,18 @@
 from pathlib import Path
 import argparse,hashlib,json,re,shutil,xml.etree.ElementTree as ET
 ROOT=Path(__file__).resolve().parents[1]
-VERSION='V4'
+VERSION='V4-ddr1'
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def read(p):return json.loads(p.read_text(encoding='utf-8'))
 def write(p,value):p.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 def inputs():
     paths=[p for d in ('rtl','ip','tools') for p in (ROOT/d).rglob('*') if p.is_file() and '__pycache__' not in p.parts]
     paths += [ROOT/n for n in ('ti60f225_oob.xml','ti60f225_oob.sdc','ti60f225_oob.peri.xml','debug_top.v',
-        'debug_profile.wizard.json','Panel_1080p_reg.mem','build.ps1','flash.ps1','config/model.json','config/source-files.json')]
+        'debug_profile.wizard.json','Panel_1080p_reg.mem','build.ps1','flash.ps1','config/model.json','config/source-files.json','config/deployment-baseline.json')]
     return {p.relative_to(ROOT).as_posix():sha(p) for p in sorted(set(paths))}
 def audit():
     tree=ET.parse(ROOT/'ti60f225_oob.xml');files=[n.attrib['name'] for n in tree.iter() if n.tag.split('}')[-1]=='design_file']
-    assert len(files)==89 and all((ROOT/n).is_file() for n in files),'Production source missing'
+    assert len(files)==77 and all((ROOT/n).is_file() for n in files),'Production source missing'
     origin=read(ROOT/'config/source-files.json')
     revised=origin.get('revision',{}).get('source_sha256',{})
     assert set(revised)<=set(origin['source_sha256'])
@@ -26,9 +26,9 @@ def audit():
     for name in files:
         p=ROOT/name;text=re.sub(r'/\*.*?\*/|//[^\n]*','',p.read_text(encoding='utf-8',errors='replace'),flags=re.S)
         for ref in re.findall(r'`include\s*"([^"]+)"',text):
-            assert any(q.is_file() for q in (p.parent/ref,ROOT/ref,ROOT/'rtl'/ref,ROOT/'ip/csi_rx_controller'/ref)),(name,ref)
+            assert any(q.is_file() for q in (p.parent/ref,ROOT/ref,ROOT/'rtl'/ref,ROOT/'ip/csi_rx_controller'/ref,ROOT/'ip/ddr3_official'/ref)),(name,ref)
     for name in ('rtl/edge/cnn/weights.mem','rtl/edge/cnn/parameters.mem','rtl/edge/digit_features_v14.mem',
-                 'rtl/edge/printed_digit_templates.mem','rtl/gamma_conrrection/2P2.mem','Panel_1080p_reg.mem'):
+                 'rtl/edge/printed_digit_templates.mem','rtl/gamma_conrrection/2P2.mem','Panel_1080p_reg.mem','ip/ddr3_official/ddr3_controller.bin'):
         assert (ROOT/name).is_file(),name
     return {'production_source_files':len(files),'source_identity_verified':True,'automatic_threshold':False,
             'fixed_margin_q6':64,'dependency_audit':'pass','old_metric_suites_run':[]}
@@ -53,7 +53,7 @@ def main():
         manifest={'version':VERSION,'date':'2026-11-04','tool':'Efinity 2026.1.132','device':'Ti60F225I3','stages':{s:'pass' for s in ('map','interface','pnr','pgm')},
             'timing_status':'pass','worst_setup_slack_ns':min(setup),'worst_hold_slack_ns':min(hold),'resources':resources,
             'input_sha256':before,'source_audit':audit(),'metric_suites_run':[],'automatic_threshold':False,
-            'metrics_scope':'V4 production build',
+            'metrics_scope':'Official Efinity DDR3 IP integration; existing image/recognition metrics inherited',
             'artifacts':{ext:{'path':'.build/ti60f225_oob.'+ext,'bytes':(build/('ti60f225_oob.'+ext)).stat().st_size,'sha256':sha(build/('ti60f225_oob.'+ext))} for ext in ('bit','hex')}}
         write(build/'inputs-after.json',inputs());write(build/'manifest.json',manifest)
         print(json.dumps({k:manifest[k] for k in ('version','resources','worst_setup_slack_ns','worst_hold_slack_ns','artifacts')},indent=2))

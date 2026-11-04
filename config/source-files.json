@@ -1,5 +1,5 @@
 {
-  "version": "V4",
+  "version": "V4-ddr1",
   "source_sha256": {
     "debug_profile.wizard.json": "5af645a0b9d16056ec2cab9ffc80a6cc960347aa5138e3ce4729caa55d6fa758",
     "debug_top.v": "a1e04d0931031722bed2e7ab34ff043ee6a3fa652db6f80c5e1a179ad6ae73a9",
@@ -105,6 +105,27 @@
     "rtl/user_dual_port_ram.v": "f522e90f71c388ba4e2e91fd2506039982bdb60b8bb4710d6d99f8895e9367df",
     "ti60f225_oob.peri.xml": "ef83f79aea412f5a71801daee1ff670f5723908b5589a213b5b011e22cad7b55",
     "ti60f225_oob.sdc": "f76f1ddfe2fe637f44329765cb8dc40376573eb9ef2b730ccc1a05ba48113c8a",
-    "ti60f225_oob.xml": "f3dfb4523fde5cf9e66ecd04375c2149e6dcc0daa35e080705d0180841fe45d0"
+    "ti60f225_oob.xml": "f3dfb4523fde5cf9e66ecd04375c2149e6dcc0daa35e080705d0180841fe45d0",
+    "ip/ddr3_official/ddr3_controller.bin": "daa7606953d962202683326553bf354b2925438a0269e137a6515feffe57f896",
+    "ip/ddr3_official/ddr3_controller.vh": "fd6aec00351903462090d3b46879737d707640ae5db04d6ac3537158ec6a71fa",
+    "ip/ddr3_official/ddr3_device_ID.vh": "0c6dd4f4305a2b15a984df2d00abd833245bfc058cdb18768128e5b2acab09dc",
+    "ip/ddr3_official/ddr3_official.sv": "04d59a04207a1d6c93a92da5b1af7ed0482bc52fde9bb3d77ea8c5dc08fa3f63",
+    "ip/ddr3_official/ddr3_official_define.svh": "18879805c421df2d14474e46c929f11931cb35f183964f467d743c87d80df219",
+    "ip/ddr3_official/ddr3_official_tmpl.sv": "a472c56032f36cb09717d991e86be9f10be0d9b7e663209f31c086b87d4e947e",
+    "ip/ddr3_official/ddr3_official_tmpl.vhd": "3bf961714185f092e78ce51e3c2db26eebef79ba19e074244cdb7fc3a40992e6",
+    "ip/ddr3_official/settings.json": "b37482ca150daacae68ad7fb2cad2471b26d8971b089da6b45c93659853a8a85",
+    "rtl/frame_buffer_V3/efinity_ddr3_adapter.v": "c0bc44fea6c7265ee424fa0f38487d406d27a415469b1d9ea504511eb00a76c8"
+  },
+  "revision": {
+    "version": "V4-ddr1",
+    "baseline_tag": "V4",
+    "baseline_commit": "81edea8",
+    "source_sha256": {
+      "rtl/ti60f225_oob_top.v": "9d1ecf593e62079b95d763d4533046b481a4291674b710ef1f2c9969a76ec9dc",
+      "ti60f225_oob.peri.xml": "88442529527bd44a0ca2a78bd98175d6b424cc8e06c1123d0c2759ba175a320d",
+      "ti60f225_oob.sdc": "1bec9c4ad22c9df180ac1bb11647efdb7154e1b674f3059b34051fc94963b423",
+      "ti60f225_oob.xml": "91d09b725e8a6fbca51a27dc97e8edf11904254c54b67002573f567225bc52b4"
+    },
+    "scope": "Efinity DDR3 IP 5.16 AXI adapter, 200 MHz PHY core clock, vendor CK/DQS/DQ configuration"
   }
 }

@@ -6,7 +6,7 @@
 create_clock -period 2.500 -name tx_cal_clk_90edge [get_ports {tx_cal_clk_90edge}]
 create_clock -period 2.500 -name sdram_clk [get_ports {sdram_clk}]
 create_clock -period 2.500 -name rx_cal_clk [get_ports {rx_cal_clk}]
-create_clock -period 2.500 -name tx_cal_clk [get_ports {tx_cal_clk}]
+create_clock -period 5.000 -name ddr_core_clk [get_ports {ddr_core_clk}]
 create_clock -period 10.000 -name clk_100m [get_ports {clk_100m}]
 create_clock -period 13.468 -name vid_clk_dvi2 [get_ports {vid_clk_dvi2}]
 create_clock -period 6.734 -name hdmi_tx_slow_clk [get_ports {hdmi_tx_slow_clk}]
@@ -23,7 +23,7 @@ create_clock -period 200.000 -name CLK_5M [get_ports {CLK_5M}]
 create_clock -period 10.000 -name i_cam_ck_CLKOUT [get_ports {i_cam_ck_CLKOUT}]
 
 set_clock_groups -exclusive  -group {i_mipi_rx_pclk} -group {jtag_inst1_TCK}
-set_clock_groups -exclusive -group {core_clk} -group {tx_cal_clk} -group {i_mipi_tx_pclk} -group {vid_clk_dvi2} -group {CLK_5M} -group {i_mipi_rx_pclk} -group {sdram_clk} -group {rx_cal_clk}
+set_clock_groups -asynchronous -group {core_clk} -group {ddr_core_clk sdram_clk tx_cal_clk_90edge rx_cal_clk} -group {i_mipi_tx_pclk} -group {vid_clk_dvi2} -group {CLK_5M} -group {i_mipi_rx_pclk}
 set_clock_groups -exclusive -group {i_mipi_tx_pclk}    -group {i_mipi_rx_pclk}
 
 #set_clock_groups -exclusive -group {i_sysclk} -group {jtag_inst1_TCK}                       2.500           -0.197           (R-R)
@@ -235,20 +235,20 @@ set_output_delay -clock tx_cal_clk_90edge -reference_pin [get_ports {tx_cal_clk_
 set_output_delay -clock tx_cal_clk_90edge -reference_pin [get_ports {tx_cal_clk_90edge~CLKOUT~14~1}] -min -0.140 [get_ports {ddr_dq_oe[15]}]
 set_input_delay -clock rx_cal_clk -reference_pin [get_ports {rx_cal_clk~CLKOUT~172~1}] -max 0.476 [get_ports {ddr_dqs_in_lo[0] ddr_dqs_in_hi[0]}]
 set_input_delay -clock rx_cal_clk -reference_pin [get_ports {rx_cal_clk~CLKOUT~172~1}] -min 0.276 [get_ports {ddr_dqs_in_lo[0] ddr_dqs_in_hi[0]}]
-set_output_delay -clock tx_cal_clk -reference_pin [get_ports {tx_cal_clk~CLKOUT~174~1}] -max 0.302 [get_ports {ddr_dqs_out_lo[0] ddr_dqs_out_hi[0]}]
-set_output_delay -clock tx_cal_clk -reference_pin [get_ports {tx_cal_clk~CLKOUT~174~1}] -min -0.140 [get_ports {ddr_dqs_out_lo[0] ddr_dqs_out_hi[0]}]
-set_output_delay -clock tx_cal_clk -reference_pin [get_ports {tx_cal_clk~CLKOUT~174~1}] -max 0.302 [get_ports {ddr_dqs_oe[0]}]
-set_output_delay -clock tx_cal_clk -reference_pin [get_ports {tx_cal_clk~CLKOUT~174~1}] -min -0.140 [get_ports {ddr_dqs_oe[0]}]
-set_output_delay -clock tx_cal_clk -reference_pin [get_ports {tx_cal_clk~CLKOUT~175~1}] -max 0.302 [get_ports {ddr_dqs_oe_n[0]}]
-set_output_delay -clock tx_cal_clk -reference_pin [get_ports {tx_cal_clk~CLKOUT~175~1}] -min -0.140 [get_ports {ddr_dqs_oe_n[0]}]
+set_output_delay -clock sdram_clk -reference_pin [get_ports {sdram_clk~CLKOUT~174~1}] -max 0.302 [get_ports {ddr_dqs_out_lo[0] ddr_dqs_out_hi[0]}]
+set_output_delay -clock sdram_clk -reference_pin [get_ports {sdram_clk~CLKOUT~174~1}] -min -0.140 [get_ports {ddr_dqs_out_lo[0] ddr_dqs_out_hi[0]}]
+set_output_delay -clock sdram_clk -reference_pin [get_ports {sdram_clk~CLKOUT~174~1}] -max 0.302 [get_ports {ddr_dqs_oe[0]}]
+set_output_delay -clock sdram_clk -reference_pin [get_ports {sdram_clk~CLKOUT~174~1}] -min -0.140 [get_ports {ddr_dqs_oe[0]}]
+set_output_delay -clock sdram_clk -reference_pin [get_ports {sdram_clk~CLKOUT~175~1}] -max 0.302 [get_ports {ddr_dqs_oe_n[0]}]
+set_output_delay -clock sdram_clk -reference_pin [get_ports {sdram_clk~CLKOUT~175~1}] -min -0.140 [get_ports {ddr_dqs_oe_n[0]}]
 set_input_delay -clock rx_cal_clk -reference_pin [get_ports {rx_cal_clk~CLKOUT~30~1}] -max 0.476 [get_ports {ddr_dqs_in_lo[1] ddr_dqs_in_hi[1]}]
 set_input_delay -clock rx_cal_clk -reference_pin [get_ports {rx_cal_clk~CLKOUT~30~1}] -min 0.276 [get_ports {ddr_dqs_in_lo[1] ddr_dqs_in_hi[1]}]
-set_output_delay -clock tx_cal_clk -reference_pin [get_ports {tx_cal_clk~CLKOUT~32~1}] -max 0.302 [get_ports {ddr_dqs_out_lo[1] ddr_dqs_out_hi[1]}]
-set_output_delay -clock tx_cal_clk -reference_pin [get_ports {tx_cal_clk~CLKOUT~32~1}] -min -0.140 [get_ports {ddr_dqs_out_lo[1] ddr_dqs_out_hi[1]}]
-set_output_delay -clock tx_cal_clk -reference_pin [get_ports {tx_cal_clk~CLKOUT~32~1}] -max 0.302 [get_ports {ddr_dqs_oe[1]}]
-set_output_delay -clock tx_cal_clk -reference_pin [get_ports {tx_cal_clk~CLKOUT~32~1}] -min -0.140 [get_ports {ddr_dqs_oe[1]}]
-set_output_delay -clock tx_cal_clk -reference_pin [get_ports {tx_cal_clk~CLKOUT~33~1}] -max 0.302 [get_ports {ddr_dqs_oe_n[1]}]
-set_output_delay -clock tx_cal_clk -reference_pin [get_ports {tx_cal_clk~CLKOUT~33~1}] -min -0.140 [get_ports {ddr_dqs_oe_n[1]}]
+set_output_delay -clock sdram_clk -reference_pin [get_ports {sdram_clk~CLKOUT~32~1}] -max 0.302 [get_ports {ddr_dqs_out_lo[1] ddr_dqs_out_hi[1]}]
+set_output_delay -clock sdram_clk -reference_pin [get_ports {sdram_clk~CLKOUT~32~1}] -min -0.140 [get_ports {ddr_dqs_out_lo[1] ddr_dqs_out_hi[1]}]
+set_output_delay -clock sdram_clk -reference_pin [get_ports {sdram_clk~CLKOUT~32~1}] -max 0.302 [get_ports {ddr_dqs_oe[1]}]
+set_output_delay -clock sdram_clk -reference_pin [get_ports {sdram_clk~CLKOUT~32~1}] -min -0.140 [get_ports {ddr_dqs_oe[1]}]
+set_output_delay -clock sdram_clk -reference_pin [get_ports {sdram_clk~CLKOUT~33~1}] -max 0.302 [get_ports {ddr_dqs_oe_n[1]}]
+set_output_delay -clock sdram_clk -reference_pin [get_ports {sdram_clk~CLKOUT~33~1}] -min -0.140 [get_ports {ddr_dqs_oe_n[1]}]
 
 # LVDS Tx Constraints
 #######################
@@ -337,3 +337,9 @@ set_output_delay -clock i_mipi_tx_pclk -reference_pin [get_ports {i_mipi_tx_pclk
 set_output_delay -clock i_mipi_tx_pclk -reference_pin [get_ports {i_mipi_tx_pclk~CLKOUT~31~322}] -min -0.140 [get_ports {mipi_dp_data3_RST}]
 
 
+
+# Vendor DDR3 IP reference clock exceptions; PHY core-to-I/O paths remain timed.
+set_clock_groups -exclusive -group {tx_cal_clk_90edge} -group {rx_cal_clk} -group {sdram_clk}
+set_false_path -from [get_clocks tx_cal_clk_90edge] -to [get_clocks ddr_core_clk]
+set_false_path -from [get_clocks rx_cal_clk] -to [get_clocks ddr_core_clk]
+set_false_path -from [get_clocks sdram_clk] -to [get_clocks ddr_core_clk]

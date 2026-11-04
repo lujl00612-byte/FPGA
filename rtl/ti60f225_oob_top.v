@@ -13,32 +13,32 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 //`define SOFT_TAP 1
-`include "ddr3_controller/ddr3_parameter.vh"
+// Memory bus dimensions are independent of the generated DDR IP macros.
 // `include "define.v"
 
 module ti60f225_oob_top #(
 
 	parameter                       RANK_RATIO         = 1,       // # of unique CS outputs per rank
-	parameter                       ASYN_AXI_CLK       = `ASYN_AXI_CLK, 
-	parameter                       RANKS              = `RANKS,
-	parameter                       CK_WIDTH           = `CK_WIDTH,       // # of CK/CK# outputs to memory   
-	parameter                       CKE_WIDTH          = `CKE_WIDTH,       // # of cke outputs
-	parameter                       CS_WIDTH           = `CS_WIDTH,       // # of unique CS outputs
-	parameter                       BANK_WIDTH         = `BANK_WIDTH,       // # of bank bits
-	parameter                       ROW_WIDTH          = `ROW_WIDTH,       // DRAM address bus width
-	parameter                       COL_WIDTH          = `COL_WIDTH,      // column address width
-	parameter                       DM_WIDTH           = `DM_WIDTH,       // # of DM (data mask)
-	parameter                       DQS_WIDTH          = `DQS_WIDTH,       // # of DQS (strobe)
-	parameter                       DQ_WIDTH           = `DQ_WIDTH,      // # of DQ (data)
-	parameter                       ODT_WIDTH          = `ODT_WIDTH,
-	parameter                       DQ_CNT_WIDTH       = `DQ_CNT_WIDTH,       // = ceil(log2(DQ_WIDTH))
-	parameter                       DQS_CNT_WIDTH      = `DQS_CNT_WIDTH,       // = ceil(log2(DQS_WIDTH))  
-	parameter                       DRAM_WIDTH         = `DRAM_WIDTH,       // # of DQ per DQS   
-	parameter                       DATA_WIDTH         = `DATA_WIDTH,
-	parameter                       ADDR_WIDTH         = `ADDR_WIDTH,    
-	parameter                       AXI_ID_WIDTH       = `AXI_ID_WIDTH,
-	parameter                       AXI_ADDR_WIDTH     = `AXI_ADDR_WIDTH,
-	parameter                       AXI_DATA_WIDTH     = `AXI_DATA_WIDTH
+	parameter                       ASYN_AXI_CLK       = 1,
+	parameter                       RANKS              = 1,
+	parameter                       CK_WIDTH           = 1,       // # of CK/CK# outputs to memory
+	parameter                       CKE_WIDTH          = 1,       // # of cke outputs
+	parameter                       CS_WIDTH           = 1,       // # of unique CS outputs
+	parameter                       BANK_WIDTH         = 3,       // # of bank bits
+	parameter                       ROW_WIDTH          = 14,       // DRAM address bus width
+	parameter                       COL_WIDTH          = 10,      // column address width
+	parameter                       DM_WIDTH           = 2,       // # of DM (data mask)
+	parameter                       DQS_WIDTH          = 2,       // # of DQS (strobe)
+	parameter                       DQ_WIDTH           = 16,      // # of DQ (data)
+	parameter                       ODT_WIDTH          = 1,
+	parameter                       DQ_CNT_WIDTH       = 4,       // = ceil(log2(DQ_WIDTH))
+	parameter                       DQS_CNT_WIDTH      = 1,       // = ceil(log2(DQS_WIDTH))
+	parameter                       DRAM_WIDTH         = 8,       // # of DQ per DQS
+	parameter                       DATA_WIDTH         = 16,
+	parameter                       ADDR_WIDTH         = 30,
+	parameter                       AXI_ID_WIDTH       = 4,
+	parameter                       AXI_ADDR_WIDTH     = 32,
+	parameter                       AXI_DATA_WIDTH     = 128
 )
 (
 
@@ -129,7 +129,7 @@ module ti60f225_oob_top #(
 	
 	input 					tx_cal_clk_90edge,
   	input 					rx_cal_clk,
-  	input 					tx_cal_clk,
+    input wire ddr_core_clk, // Efinity DDR half-rate clock @ 200 MHz
 	input                              core_clk,     // CORE CLK @ 100MHz
 	input                              sdram_clk,    // SDRAM CK @ 400MHz
 	// PLL status flags  
@@ -137,8 +137,8 @@ module ti60f225_oob_top #(
 	output [4:0]                       pll_shift_sel,
 	output                             pll_shift_ena,  
 	// memory interface ports
-	output                             ddr_ck_hi,
-	output                             ddr_ck_lo,
+
+
 	output                             ddr_reset_n,
 	output [CKE_WIDTH-1:0]             ddr_cke,     
 	output [ROW_WIDTH-1:0]             ddr_addr,
@@ -797,7 +797,7 @@ end
        .history_ready(history_ready),.history_read_valid(history_read_valid),.history_busy(history_busy),.history_fault(history_fault),
        .history_frame_id(history_frame_id),.history_age(history_age),.history_count(history_count),
        .axi_clk		(core_clk 	        ),
-       .rst_n			(vid_rst_n   ),
+       .rst_n             (vid_rst_n && cal_done),
 
 /*i*/.i_clk			(i_mipi_rx_pclk      ),
 /*i*/.i_vs			(w_mipi_rx_vs	),
@@ -862,105 +862,30 @@ end
 );
 
 
-ddr3_top                 u_ddr3_top
-(
-
-.axi_clk                (core_clk            ),
-.core_clk               (core_clk            ),
-.sdram_clk              (sdram_clk           ),  
-.rx_cal_clk             (rx_cal_clk          ),
-.tx_cal_clk             (tx_cal_clk          ),
-.tx_cal_clk_90edge      (tx_cal_clk_90edge   ),
-.rstn                   (w_arstn             ),      
-.pll_shift              (pll_shift           ),
-.pll_shift_sel          (pll_shift_sel       ),
-.pll_shift_ena          (pll_shift_ena       ),       
-///////////////DDR BUS
-.ddr_ck_hi              (ddr_ck_hi           ),
-.ddr_ck_lo              (ddr_ck_lo           ),
-.ddr_cke                (ddr_cke             ),    
-.ddr_reset_n            (ddr_reset_n         ),
-.ddr_cs_n               (ddr_cs_n            ),
-.ddr_ras_n              (ddr_ras_n           ),
-.ddr_cas_n              (ddr_cas_n           ),
-.ddr_we_n               (ddr_we_n            ),     
-.ddr_addr               (ddr_addr            ),
-.ddr_ba                 (ddr_ba              ),
-
-.ddr_dqs_oe             (ddr_dqs_oe          ),
-.ddr_dqs_oe_n           (ddr_dqs_oe_n        ),
-.ddr_dq_oe              (ddr_dq_oe           ),
-.ddr_dqs_in_hi          (ddr_dqs_in_hi       ),
-.ddr_dqs_in_lo          (ddr_dqs_in_lo       ),
-.ddr_dq_in_hi           (ddr_dq_in_hi        ),
-.ddr_dq_in_lo           (ddr_dq_in_lo        ),
-
-.ddr_dqs_out_hi         (ddr_dqs_out_hi      ),
-.ddr_dqs_out_lo         (ddr_dqs_out_lo      ),
-.ddr_dq_out_hi          (ddr_dq_out_hi       ),
-.ddr_dq_out_lo          (ddr_dq_out_lo       ),
-
-.ddr_dm_hi              (ddr_dm_hi           ),
-.ddr_dm_lo              (ddr_dm_lo           ),
-.ddr_odt                (ddr_odt             ),
-
-// Application interface ports
-.app_sr_req                     (1'b0),
-.app_ref_req                    (1'b0),
-.app_zq_req                     (1'b0),
-.app_sr_active                  (app_sr_active),
-.app_ref_ack                    (app_ref_ack),
-.app_zq_ack                     (app_zq_ack),
-
-// Slave Interface Write Address Ports
-.s_axi_awid                     (s_axi_awid        ),
-.s_axi_awaddr                   (s_axi_awaddr      ),
-.s_axi_awlen                    (s_axi_awlen       ),
-.s_axi_awsize                   (s_axi_awsize      ),
-.s_axi_awburst                  (s_axi_awburst     ),
-.s_axi_awlock                   (s_axi_awlock      ),
-.s_axi_awcache                  (s_axi_awcache     ),
-.s_axi_awprot                   (s_axi_awprot      ),
-.s_axi_awqos                    (4'h0              ),
-.s_axi_awvalid                  (s_axi_awvalid     ),
-.s_axi_awready                  (s_axi_awready     ),
-// Slave Interface Write Data Ports
-.s_axi_wdata                    (s_axi_wdata       ),
-.s_axi_wstrb                    (s_axi_wstrb       ),
-.s_axi_wlast                    (s_axi_wlast       ),
-.s_axi_wvalid                   (s_axi_wvalid      ),
-.s_axi_wready                   (s_axi_wready      ),
-// Slave Interface Write Response Ports
-.s_axi_bid                      (s_axi_bid         ),
-.s_axi_bresp                    (s_axi_bresp       ),
-.s_axi_bvalid                   (s_axi_bvalid      ),
-.s_axi_bready                   (s_axi_bready      ),
-// Slave Interface Read Address Ports
-.s_axi_arid                     (s_axi_arid        ),
-.s_axi_araddr                   (s_axi_araddr      ),
-.s_axi_arlen                    (s_axi_arlen       ),
-.s_axi_arsize                   (s_axi_arsize      ),
-.s_axi_arburst                  (s_axi_arburst     ),
-.s_axi_arlock                   (s_axi_arlock      ),
-.s_axi_arcache                  (s_axi_arcache     ),
-.s_axi_arprot                   (s_axi_arprot      ),
-.s_axi_arqos                    (4'h0              ),
-.s_axi_arvalid                  (s_axi_arvalid     ),
-.s_axi_arready                  (s_axi_arready     ),
-// Slave Interface Read Data Ports
-.s_axi_rid                      (s_axi_rid         ),
-.s_axi_rdata                    (s_axi_rdata       ),
-.s_axi_rresp                    (s_axi_rresp       ),
-.s_axi_rlast                    (s_axi_rlast       ),
-.s_axi_rvalid                   (s_axi_rvalid      ),
-.s_axi_rready                   (s_axi_rready      ),
-//DEBUG       
-.wrlvl_dq_check                 (wrlvl_dq_check    ) ,
-.rd_level_dqs_check             (rd_level_dqs_check) ,
-.init_cur_state                 (init_cur_state    ) ,
-.idelay_ld                      (idelay_ld         ) ,
-.mpr_rdlvl_dly                  (mpr_rdlvl_dly     ) ,
-.cal_done                       (cal_done          ) 
+efinity_ddr3_adapter u_ddr3_top (
+    .clk(core_clk), .ddr_core_clk(ddr_core_clk), .dq_clk(tx_cal_clk_90edge),
+    .ck_clk(sdram_clk), .rx_clk(rx_cal_clk), .rst_n(w_arstn),
+    .pll_shift(pll_shift), .pll_shift_sel(pll_shift_sel), .pll_shift_ena(pll_shift_ena),
+    .cal_ready(cal_done), .ddr_reset_n(ddr_reset_n), .ddr_cs_n(ddr_cs_n),
+    .ddr_ras_n(ddr_ras_n), .ddr_cas_n(ddr_cas_n), .ddr_we_n(ddr_we_n),
+    .ddr_cke(ddr_cke), .ddr_odt(ddr_odt), .ddr_addr(ddr_addr), .ddr_ba(ddr_ba),
+    .dqs_hi(ddr_dqs_in_hi), .dqs_lo(ddr_dqs_in_lo),
+    .dq_hi(ddr_dq_in_hi), .dq_lo(ddr_dq_in_lo),
+    .dqs_out_hi(ddr_dqs_out_hi), .dqs_out_lo(ddr_dqs_out_lo),
+    .dqs_oe(ddr_dqs_oe), .dqs_oe_n(ddr_dqs_oe_n),
+    .dq_out_hi(ddr_dq_out_hi), .dq_out_lo(ddr_dq_out_lo), .dq_oe(ddr_dq_oe),
+    .dm_hi(ddr_dm_hi), .dm_lo(ddr_dm_lo),
+    .awid(s_axi_awid), .awaddr(s_axi_awaddr), .awlen(s_axi_awlen),
+    .awsize(s_axi_awsize), .awburst(s_axi_awburst), .awlock(s_axi_awlock),
+    .awvalid(s_axi_awvalid), .awready(s_axi_awready),
+    .wdata(s_axi_wdata), .wstrb(s_axi_wstrb), .wlast(s_axi_wlast),
+    .wvalid(s_axi_wvalid), .wready(s_axi_wready),
+    .bid(s_axi_bid), .bresp(s_axi_bresp), .bvalid(s_axi_bvalid), .bready(s_axi_bready),
+    .arid(s_axi_arid), .araddr(s_axi_araddr), .arlen(s_axi_arlen),
+    .arsize(s_axi_arsize), .arburst(s_axi_arburst), .arlock(s_axi_arlock),
+    .arvalid(s_axi_arvalid), .arready(s_axi_arready),
+    .rid(s_axi_rid), .rdata(s_axi_rdata), .rresp(s_axi_rresp),
+    .rlast(s_axi_rlast), .rvalid(s_axi_rvalid), .rready(s_axi_rready)
 );
 
 //***************************************************************************
