@@ -1,4 +1,6 @@
 {
+  "version": "V4-ddr1",
+  "date": "2026-11-04",
   "tool": "Efinity 2026.1.132",
   "device": "Ti60F225I3",
   "stages": {
@@ -8,23 +10,21 @@
     "pgm": "pass"
   },
   "timing_status": "pass",
-  "worst_setup_slack_ns": 0.155,
+  "worst_setup_slack_ns": 0.341,
   "worst_hold_slack_ns": 0.026,
   "resources": {
-    "EFX_LUT4": 29749,
-    "EFX_FF": 18189,
-    "EFX_RAM10": 249,
+    "EFX_LUT4": 29730,
+    "EFX_FF": 17795,
+    "EFX_RAM10": 240,
     "EFX_DPRAM10": 6,
     "EFX_DSP48": 54,
     "EFX_DSP24": 3
   },
-  "version": "V4",
-  "build_scope": "Inherited validated hardware build; publication metadata and tooling repackaged",
-  "hardware_logic_changed": false,
   "input_sha256": {
-    "build.ps1": "88e1e1e6a8bcb0301fbbb2c980641b451ea972f995862724f88ebd7587a4e949",
-    "config/model.json": "c7f42cc477fa65ed8ec8b982321f3d089b1d3deb7636baac92e3c1fc03c18c12",
-    "config/source-files.json": "1c26baa4634ba6817614eb314f6cfa323f16f03d84567996c34c1cf8cd4758ce",
+    "build.ps1": "306189b0db4061505e13b33eca5043fbd711d74c0f7799e7ee3693f019704307",
+    "config/deployment-baseline.json": "44e3df6b1c64b9be6d1aa9dd3f2c615b39e6f87d3419226b165715c713e68b72",
+    "config/model.json": "fc00e35d8d4af4fa6d6be1180f310a0597ba166a7256ee6fe23118d20942b58e",
+    "config/source-files.json": "49de28790f898da9d2b7119ccfc95bea51a2c11642d333b7868fedc495f8b6bc",
     "debug_profile.wizard.json": "5af645a0b9d16056ec2cab9ffc80a6cc960347aa5138e3ce4729caa55d6fa758",
     "debug_top.v": "a1e04d0931031722bed2e7ab34ff043ee6a3fa652db6f80c5e1a179ad6ae73a9",
     "flash.ps1": "f04cb317a80446583a7de82d1fb92af498158927d2904b1bee20d8fed406735b",
@@ -32,6 +32,16 @@
     "ip/csi_rx_controller/csi_rx_controller_define.svh": "3f5bd0d4ba2a72e8a397fe8f091c058ce879c83ad86ce7091f9a41c6775784ff",
     "ip/csi_rx_controller/csi_rx_controller_define.vh": "149c14940be1b2bb5f21f7475358e57481bf8bbb4d35929de1f01e9b8b304fc1",
     "ip/csi_rx_controller/settings.json": "21ace23896a1d40671c9fe7c2510ab82b6a126aff0c7bc81859edd41d6607e1b",
+    "ip/ddr3_official/ddr3_controller.bin": "daa7606953d962202683326553bf354b2925438a0269e137a6515feffe57f896",
+    "ip/ddr3_official/ddr3_controller.vh": "fd6aec00351903462090d3b46879737d707640ae5db04d6ac3537158ec6a71fa",
+    "ip/ddr3_official/ddr3_device_ID.vh": "0c6dd4f4305a2b15a984df2d00abd833245bfc058cdb18768128e5b2acab09dc",
+    "ip/ddr3_official/ddr3_official.sv": "04d59a04207a1d6c93a92da5b1af7ed0482bc52fde9bb3d77ea8c5dc08fa3f63",
+    "ip/ddr3_official/ddr3_official_define.svh": "18879805c421df2d14474e46c929f11931cb35f183964f467d743c87d80df219",
+    "ip/ddr3_official/ddr3_official_tmpl.sv": "a472c56032f36cb09717d991e86be9f10be0d9b7e663209f31c086b87d4e947e",
+    "ip/ddr3_official/ddr3_official_tmpl.vhd": "3bf961714185f092e78ce51e3c2db26eebef79ba19e074244cdb7fc3a40992e6",
+    "ip/ddr3_official/ipm/component.pickle": "a67187e6fb8f7a55fb3b6e217b5f95847514d247ab54fb4113ffeb2e11a6c7e0",
+    "ip/ddr3_official/ipm/graph.pickle": "66b7182303bc66ccdd3b147da489230a83f61be13e7732059f6ce8a48eb96e16",
+    "ip/ddr3_official/settings.json": "b37482ca150daacae68ad7fb2cad2471b26d8971b089da6b45c93659853a8a85",
     "Panel_1080p_reg.mem": "1b192b20b57bda019d39b24126789c582ae5da0b9df5395152854a8c2c4576b7",
     "rtl/cam_i2c_ctrl/i2c/i2c_16addr_8data.v": "12210c511b52dcfdaca2f4cffc0fafb390ac87ed3b3c97dfa2c6008a339c4bb7",
     "rtl/cam_i2c_ctrl/i2c/i2c_master_ctrl_top.v": "2534b3d0cd1793b9f91320fc8d5495820252d0221c38ca9dea247e27aea1dc7f",
@@ -113,6 +123,7 @@
     "rtl/frame_buffer_V3/ddr_history_manager.v": "441571c9635e6097686fcd796ddb1cef68125b1f203143d01e3d2a7946fd96c1",
     "rtl/frame_buffer_V3/ddr_rd_buffer.v": "71b05bbf9165c1c8deb5868be5d619d24bb54a4515731843d55edcf91908f251",
     "rtl/frame_buffer_V3/ddr_wr_buffer.v": "ff4b27484967b3b8e6f0d80c1db2dfcd60093c3f4b9bd85d6067881c53029601",
+    "rtl/frame_buffer_V3/efinity_ddr3_adapter.v": "c0bc44fea6c7265ee424fa0f38487d406d27a415469b1d9ea504511eb00a76c8",
     "rtl/frame_buffer_V3/frame_buffer.v": "071014f70d50b1100a214ad7000e8ce8383d578ef4ede024434db9e99f500fbb",
     "rtl/frame_buffer_V3/frame_info_det.v": "767dde3ef0da660b3fab019fdf7ec47710d184eb7573b12d0db2eec924875ef2",
     "rtl/frame_buffer_V3/par2ser_parse.v": "6f89421e2d6afaf3079b3464f899a7496d55cbf72efb5ca5c7b4fd48543a4620",
@@ -125,38 +136,39 @@
     "rtl/mipi_config/panel_config.v": "65106f2a94983eb9403042f1bdc235192e1cc762120babc7d1005aee8d7295fa",
     "rtl/reset.v": "126540013b52b8cab339cdaf57b1a6947d3088e97eeb9cb84fb68448f8a2e978",
     "rtl/simple_dual_port_ram.v": "01b74e74d39c4e4ae380bc7be73329987b17fffaea58bc7c92a9b24e4a110c5d",
-    "rtl/ti60f225_oob_top.v": "88121fcdf6091942643a8d4b25e40d63efc8584646f93e9a8c2fa2fb7bf4d6e1",
+    "rtl/ti60f225_oob_top.v": "9d1ecf593e62079b95d763d4533046b481a4291674b710ef1f2c9969a76ec9dc",
     "rtl/true_dual_port_ram.v": "44bfb696e997b4d31bfd3c414623623c9b60964bfe711c611cf80a39222e8e8f",
     "rtl/user_dual_port_ram.v": "f522e90f71c388ba4e2e91fd2506039982bdb60b8bb4710d6d99f8895e9367df",
-    "ti60f225_oob.peri.xml": "ef83f79aea412f5a71801daee1ff670f5723908b5589a213b5b011e22cad7b55",
-    "ti60f225_oob.sdc": "f76f1ddfe2fe637f44329765cb8dc40376573eb9ef2b730ccc1a05ba48113c8a",
-    "ti60f225_oob.xml": "f3dfb4523fde5cf9e66ecd04375c2149e6dcc0daa35e080705d0180841fe45d0",
-    "tools/final_flash.py": "e76d747651b18458f57bd2492dee106f27965e09486eacca521cc32f4f02a3bf",
-    "tools/final_project.py": "4f8e57718963b88063b8a51605a86233b1406d74a7c96f3321c3946039fa697b",
+    "ti60f225_oob.peri.xml": "88442529527bd44a0ca2a78bd98175d6b424cc8e06c1123d0c2759ba175a320d",
+    "ti60f225_oob.sdc": "1bec9c4ad22c9df180ac1bb11647efdb7154e1b674f3059b34051fc94963b423",
+    "ti60f225_oob.xml": "91d09b725e8a6fbca51a27dc97e8edf11904254c54b67002573f567225bc52b4",
+    "tools/final_flash.py": "13118a9280fbe652d17b042eb9f3cd324199677090d9873886b43007a5e64c1e",
+    "tools/final_project.py": "c2027c71e860165a134dc0c29ecfd86b5d91012f53b51a32c64fb49c266526e3",
     "tools/initialize_debug_hub.py": "6920eb9d3d538e99d89fa43212a7a75fe0c2093b544347fba9b9e74f1e727149",
     "tools/program_flash_efinity2026.py": "c230c976f315e8f1c5b8b385e2c3760c9a44279717b313d40031abc5bee80937",
     "tools/program_jtag_efinity2026.py": "9fbc79a4def09f7aeaaabc7009aca3dbdf2aeec60a5e7a893adf86cc8f48ac68"
   },
   "source_audit": {
-    "production_source_files": 89,
+    "production_source_files": 77,
     "source_identity_verified": true,
     "automatic_threshold": false,
     "fixed_margin_q6": 64,
     "dependency_audit": "pass",
     "old_metric_suites_run": []
   },
-  "automatic_threshold": false,
   "metric_suites_run": [],
+  "automatic_threshold": false,
+  "metrics_scope": "Official Efinity DDR3 IP integration; existing image/recognition metrics inherited",
   "artifacts": {
     "bit": {
       "path": "firmware/ti60f225_oob.bit",
-      "bytes": 2948682,
-      "sha256": "43d5b28061bcc57f8905a6484e76ae6b99a8e04ff93bb9e8ff32c837bf6b7736"
+      "bytes": 2945697,
+      "sha256": "b355f19eb8c7eb446ea2a625f8e765c4bfd37c4046b20180dfd6b9f7beca5f98"
     },
     "hex": {
       "path": "firmware/ti60f225_oob.hex",
-      "bytes": 2948742,
-      "sha256": "535431ad09d30f9b0829c40934a4d96fe0d4bd0aba42bab84ded1e49aba7e030"
+      "bytes": 2945757,
+      "sha256": "9c346246305421ffd7a5696f12a85c98abb400793eec77768e1dfbf239474bc5"
     }
   }
 }
