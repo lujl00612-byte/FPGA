@@ -33,12 +33,13 @@
     "https://www.efinixinc.com/docs/ddr3-controller-core-ug-v2.1.pdf",
     "https://www.elitestek.com/uploads/soft/230626/efinity-ug-v12.0.pdf"
   ],
-  "status": "map/interface/pnr/pgm passed; Flash pending",
+  "status": "actual build completed; Flash write and vendor check completed before the subsequent no-board instruction",
   "physical_cold_boot": "not performed",
   "camera_acceptance": "not performed",
   "timing": {
     "setup_slack_ns": 0.341,
     "hold_slack_ns": 0.026
   },
-  "previous_next_frames": "Existing four-slot frozen replay confirmed from source; KEY2+KEY0 older, KEY2+KEY1 newer; physical operation pending"
+  "previous_next_frames": "Existing four-slot frozen replay confirmed from source; KEY2+KEY0 older, KEY2+KEY1 newer; physical operation pending",
+  "further_board_operations": "stopped as requested; no camera capture or physical cold boot"
 }
