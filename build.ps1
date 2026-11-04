@@ -24,8 +24,10 @@ try {
             if($taskStage -eq 'map'){$taskArgs+=@('--dir','H:\ip\csi_rx_controller','--dir','H:\ip\ddr3_official','--map_opts','veri_options=verilog_mode=sv_09,vhdl_mode=vhdl_2008','root=ti60f225_oob_top')}
             if($taskStage -eq 'interface'){$taskArgs+=@('--pt_opts','peri_file=H:\ti60f225_oob.peri.xml')}
             Write-Output ('V4-ddr1 direct build: '+$taskStage)
-            & 'V:\bin\efx_run.bat' @taskArgs 2>&1 | Tee-Object -LiteralPath (Join-Path $taskRoot ('.build\'+$taskStage+'.log'))
-            if($LASTEXITCODE -ne 0){throw ($taskStage+' failed')}
+            & 'V:\bin\efx_run.bat' @taskArgs 2>&1 | Tee-Object -Variable taskStageLog
+            $taskStageExit=$LASTEXITCODE
+            $taskStageLog | Set-Content -LiteralPath (Join-Path $taskRoot ('.build\'+$taskStage+'.log')) -Encoding utf8
+            if($taskStageExit -ne 0){throw ($taskStage+' failed')}
         }
     } finally {Pop-Location}
 } finally {
