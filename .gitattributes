@@ -1,0 +1,4 @@
+# Preserve the exact bytes identified by the build and validation manifests.
+* -text
+*.bit -diff
+*.hex -diff

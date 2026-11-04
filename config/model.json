@@ -1,0 +1,28 @@
+{
+  "version": "V4",
+  "input_channels": 2,
+  "input_size": [
+    32,
+    32
+  ],
+  "convolution_channels": [
+    16,
+    24,
+    32
+  ],
+  "output_classes": 11,
+  "quantization": "INT8",
+  "score_exponent": -6,
+  "fixed_margin": 64,
+  "confirmation_count": 2,
+  "automatic_threshold": false,
+  "fixed_rgb": [
+    280,
+    240,
+    376
+  ],
+  "rom_sha256": {
+    "rtl/edge/cnn/weights.mem": "384844a1ca24a1c636d220cae198600d97b91bac55a33ea4cf686469fa12908b",
+    "rtl/edge/cnn/parameters.mem": "52bad29630e1abeee3db366b6e9aee3e9e5805d96166f8bc7ff5274af862c1f7"
+  }
+}

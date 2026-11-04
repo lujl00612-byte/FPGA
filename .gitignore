@@ -1,0 +1,8 @@
+.build/
+.cache/
+outflow/
+artifacts/
+**/__pycache__/
+*.pyc
+*.vvp
+*.vcd
