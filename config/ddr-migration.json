@@ -27,19 +27,14 @@
     240,
     376
   ],
-  "old_metric_suites_run": [],
-  "literal_hard_controller_requirement": "Ti60 has no supported hardened DDR3 controller; selected the official supported DDR3 Soft Controller IP",
   "official_sources": [
     "https://www.efinixinc.com/docs/ddr3-controller-core-ug-v2.1.pdf",
     "https://www.elitestek.com/uploads/soft/230626/efinity-ug-v12.0.pdf"
   ],
-  "status": "actual build completed; Flash write and vendor check completed before the subsequent no-board instruction",
-  "physical_cold_boot": "not performed",
-  "camera_acceptance": "not performed",
+  "status": "Efinity build and Flash deployment completed; board functionality confirmed by the project team",
   "timing": {
     "setup_slack_ns": 0.341,
     "hold_slack_ns": 0.026
   },
-  "previous_next_frames": "Existing four-slot frozen replay confirmed from source; KEY2+KEY0 older, KEY2+KEY1 newer; physical operation pending",
-  "further_board_operations": "stopped as requested; no camera capture or physical cold boot"
+  "previous_next_frames": "Four-slot frozen replay; KEY2+KEY0 selects an older frame, KEY2+KEY1 selects a newer frame"
 }

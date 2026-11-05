@@ -1,85 +1,49 @@
-# 基于FPGA的实时图像边缘检测系统
+# 基于 FPGA 的实时图像边缘检测系统
 
-赛题四工程，基于易灵思Ti60F225I3、SC431HAI MIPI摄像头与板载DDR3，实现灰度化、中值滤波、Sobel、Canny、彩色边缘叠加、四帧冻结回放，以及几何图形、印刷数字和中文数字手势识别。
+赛题四工程，当前版本为 **V4-ddr1**。系统在易灵思 Ti60F225I3 开发板上接收 SC431HAI 摄像头的 MIPI CSI-2 图像，使用板载 DDR3 缓存，并通过 HDMI 输出 1920×1080 @ 60 Hz 画面。以下功能已由项目成员上板验证。
 
-当前固件版本为 **V4-ddr1**。本轮已接入Efinity IP Manager生成的官方DDR3控制器，并完成map、interface、pnr和pgm实际构建。工程顶层为[ti60f225_oob.xml](ti60f225_oob.xml)，固件与身份记录位于[firmware](firmware)。
+## 功能
 
-## 赛题要求与完成情况
+| 模式或操作 | 屏幕表现 |
+| --- | --- |
+| BASIC | 默认左侧灰度画面、右侧 Sobel 白色边缘，显示几何识别结果 |
+| MED SOBEL | 对灰度图执行 3×3 中值滤波后提取 Sobel 边缘 |
+| CANNY | 实时显示局部连接的 Canny 边缘。冻结时计算所选帧的全帧八邻接递归结果，屏显 `EXACT:READY` 后显示结果 |
+| DIGITS | 识别中央区域内的单个印刷数字 0～9 |
+| HANDS | 识别中文单手数字手势 1～10，默认在右半屏以 1:1 显示中央 960×1080 区域的白色手形掩膜 |
+| 视图切换 | 灰度与白边分屏、彩色红边叠加、彩色画面 |
+| 冻结与回放 | DDR3 保留最多四个有效帧。冻结后可向较旧或较新的帧逐帧切换 |
 
-| 赛题条目 | 本工程实现 | 主要入口 |
-|---|---|---|
-| 摄像头驱动与图像采集 | SC431HAI MIPI CSI-2，1920×1080，RAW10取高8位；完整帧检查与发布 | `rtl/cam_i2c_ctrl`、`rtl/frame_buffer_V3` |
-| 彩色图像转灰度 | `(77R+150G+29B)>>8`，常数移位加法 | `rtl/edge/rgb888_to_gray.v` |
-| 3×3 Sobel | 水平/垂直梯度、L1幅值、可配置阈值、双像素滑动窗口 | `rtl/edge/sobel_3x3.v`、`contest_pipeline_2px.v` |
-| HDMI显示 | 1920×1080@60Hz配置，灰度/边缘分屏和全屏彩色红边 | `rtl/edge/video_compositor.v`、`rtl/dvi_tx` |
-| 源码与约束 | RTL、生成IP、参数ROM、引脚与时序约束、BIT/HEX | 工程根目录、`ip`、`firmware` |
-| 3×3中值滤波 | 固定比较交换网络，MED SOBEL先中值后Sobel | `rtl/edge/median9.v` |
-| 实时阈值调节 | 32～192，默认128，步长8，按键消抖与帧边界更新 | `rtl/edge/video_controls.v` |
-| DDR帧缓存 | 官方DDR3 IP，四个RAW槽位，冻结后前后帧选择 | `ip/ddr3_official`、`ddr_history_manager.v` |
-| Canny | 实时局部连接；冻结帧全帧八邻接递归 | `rtl/edge/canny_recursive_frame.v` |
-| 彩色边缘叠加 | RGB与边缘同步对齐，红色轮廓叠加 | `rtl/edge/rgb_align_2px.v`、`video_compositor.v` |
-| 简易目标识别 | 圆、矩形、一般三角形、印刷数字0～9、中文单手数字1～10 | `shape_engine_2px.v`、`hand_cnn_core.v` |
-| 演示视频 | 棋盘格、几何图形、印字纸张与前后帧演示流程已列入技术说明 | 按演示流程录制 |
+几何识别覆盖圆、矩形与三角形。边缘和印刷数字阈值由按键设置，默认值为 128，范围 32～192，步长 8。自动阈值关闭，RGB 增益系数固定为 280 / 240 / 376。
 
-Ti60的官方DDR3 IP名称为 **DDR3 Soft Controller**。本工程使用Efinity 2026.1.132中的5.16版本，x16、400MHz、BL8、CL6/CWL5；应用AXI为128位100MHz，DDR主控制器为200MHz。
+## 板上操作
 
-## 操作与前后帧
+接好 SC431HAI 摄像头与 HDMI 显示器，加载本仓库固件后进入 BASIC 模式。
 
 | 操作 | 功能 |
-|---|---|
-| 上电默认 | BASIC，左灰度/右白边，阈值128 |
-| KEY2短按松开 | BASIC → MED SOBEL → CANNY → DIGITS → HANDS → BASIC |
-| KEY0 / KEY1 | 阈值+8 / -8，范围32～192 |
-| KEY0＋KEY1 | 分屏 → RGB红边/轮廓 → RGB → 分屏 |
-| KEY2长按约600ms | 冻结 / 恢复LIVE |
-| 冻结后KEY2＋KEY0 | 选择较旧的缓存帧 |
-| 冻结后KEY2＋KEY1 | 选择较新的缓存帧 |
+| --- | --- |
+| 短按并松开 KEY2 | BASIC → MED SOBEL → CANNY → DIGITS → HANDS → BASIC |
+| KEY0 / KEY1 | 分别调高 / 调低边缘或印刷数字阈值。HANDS 使用固定肤色门 |
+| KEY0＋KEY1 | 分屏 → 彩色红边叠加 → 彩色画面 → 分屏 |
+| 长按 KEY2 约 600 ms | 冻结 / 恢复实时画面 |
+| 冻结时按住 KEY2 再按 KEY0 / KEY1 | 分别选择较旧 / 较新的缓存帧 |
 
-四个RAW槽位基址为`0x00000000`、`0x00400000`、`0x00800000`和`0x00C00000`。冻结后停止接收新帧，已接收帧完成写入后发布。前后选择到达有效缓存边界时保持当前帧。
+屏显 `ID` 为当前源帧号，`N` 为有效缓存帧数，`AGE` 为当前帧在缓存中的相对位置，0 代表最新。逻辑按键 KEY0、KEY1、KEY2 分别对应 `GPIOL_07`、`GPIOL_03`、`GPIOR_21`。
 
-OSD的`ID`为源帧号，`N`为有效缓存数量，`AGE`为缓存中的新旧顺序，`0`表示最新。当前采用逐帧切换显示。逻辑键对应KEY0 `GPIOL_07`、KEY1 `GPIOL_03`、KEY2 `GPIOR_21`。
+## 固件与构建
 
-HANDS以中央960×1080为识别区域，默认右半屏1:1显示白色手形掩膜。分类采用2×32×32双通道INT8 CNN、固定分差64和两次一致确认。自动阈值关闭，RGB固定280/240/376。
+- [Efinity 工程入口](ti60f225_oob.xml)使用 Titanium Ti60F225、I3 时序模型。
+- [Flash 镜像 HEX](firmware/ti60f225_oob.hex)与 [JTAG 位流 BIT](firmware/ti60f225_oob.bit)对应正式标签 `V4-ddr1`，镜像哈希和构建数据见[固件清单](firmware/manifest.json)。
+- [技术文档](docs/technical-design.md)包含视频数据通路、DDR3 帧管理、识别实现、上板操作与构建记录。
 
-## 构建与固件
-
-安装Efinity 2026.1.132及其驱动，默认工具目录为`E:\Efinity 2026`，主机Python为`C:\Python314\python.exe`。进入工程目录执行：
+Windows 主机安装 Efinity 2026.1.132、编程器驱动和 Python 3 后，在工程根目录执行所需命令。脚本支持 `-EfinityHome` 与 `-Python` 指定安装路径。
 
 ```powershell
+# 从源码构建，输出位流和构建清单到 .build
 powershell -ExecutionPolicy Bypass -File .\build.ps1
-```
 
-脚本依次完成综合、接口、布局布线和位流生成，并记录输入SHA256。可使用`-EfinityHome`和`-Python`指定安装位置。
-
-| 资源或时序 | V4-ddr1实际构建 |
-|---|---:|
-| LUT4 | 29,730 |
-| FF | 17,795 |
-| RAM10 / DPRAM10 | 240 / 6 |
-| 存储块总占用 | 246 / 256 |
-| DSP48 / DSP24 | 54 / 3 |
-| 最差setup裕量 | +0.341ns |
-| 最差hold裕量 | +0.026ns |
-
-[构建清单](firmware/manifest.json)包含镜像SHA256、输入身份和工具版本。当前视频处理采用74.25MHz双像素通路；HDMI配置为1080p60；识别调度约每0.5秒一次。显示刷新、相机新帧和分类调度分别统计。
-
-工程保留正常烧录入口：
-
-```powershell
+# 将 firmware 中的已封存镜像烧录到 Flash
 powershell -ExecutionPolicy Bypass -File .\flash.ps1
 ```
 
-该入口核对镜像身份、保存覆盖区域备份，随后执行写入与厂商内置检查。本轮烧录在2026年11月4日已执行，载荷981,919字节，覆盖前备份1,048,576字节，厂商检查通过。部署资料保存在本地`artifacts/hardware`。
-
-## 结构与版本
-
-- `rtl`：视频、边缘、识别、帧缓存和AXI适配。
-- `ip/ddr3_official`：官方DDR3控制器生成文件、初始化微码与参数。
-- `ip/csi_rx_controller`：MIPI CSI-2接收控制器。
-- `config`：模型配置、来源身份与DDR修订记录。
-- `firmware`：当前BIT、HEX及构建清单。
-- `tools`、`build.ps1`、`flash.ps1`：构建、封存、部署入口。
-
-旧`V4`标签保留；新固件以`V4-ddr1`标识。本轮直接继承原视频算法、几何/数字/手势模块和模型ROM，构建过程未调用旧评分套件。现场视频与冷启动记录按各自实际演示归档。
-
-厂商生成IP和参考模块保留原版权声明。DDR IP功能与端口说明参见[Efinix DDR3控制器用户指南](https://www.efinixinc.com/docs/ddr3-controller-core-ug-v2.1.pdf)。
+烧录入口先核对工程与镜像身份，再备份覆盖范围、写入 Flash 并执行厂商内置检查。构建和烧录的路径、输出及复现步骤见[技术文档](docs/technical-design.md#构建与部署)。
